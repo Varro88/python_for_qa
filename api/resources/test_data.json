@@ -1,0 +1,12 @@
+{
+  "existing_book": {
+    "type": "Science",
+    "title": "Test title",
+    "creation_date": "2024-02-01"
+  },
+  "book_to_delete": {
+    "type": "Drama",
+    "title": "Test title",
+    "creation_date": "2010-11-12"
+  }
+}
