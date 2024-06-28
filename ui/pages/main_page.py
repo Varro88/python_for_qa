@@ -37,7 +37,7 @@ class MainPage(BasePage):
         leadership = self.wait_for_visibility(self.MENU_ITEM_LEADERSHIP)
         leadership.click()
 
-    @allure.step("Apply filter by '{}' topic")
+    @allure.step("Apply filter by '{1}' topic")
     def apply_filter(self, topic):
         topics_dropdown = self.wait_for_visibility(self.DROPDOWN_TOPICS)
         topics_dropdown.click()

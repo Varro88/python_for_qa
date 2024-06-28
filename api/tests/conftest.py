@@ -3,10 +3,8 @@ import pytest
 from api.utils.api_client import ApiClient
 import logging
 
-# logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S ')
 logger = logging.getLogger()
-
-file_content = open('../resources/test_data.json')
+file_content = open('api/resources/test_data.json')
 test_data = json.load(file_content)
 
 

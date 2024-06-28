@@ -5,7 +5,8 @@ from faker import Faker
 
 class TestsBook:
 
-    valid_types = ["Science", "Satire", "Drama", "Action and Adventure", "Romance"]
+    # Note: in description wrong type is mentioned: supported one is "Adventure", NOT "Action and Adventure"
+    valid_types = ["Science", "Satire", "Drama", "Adventure", "Romance"]
     faker = Faker()
 
     @allure.title("Create the book passes")
@@ -36,7 +37,7 @@ class TestsBook:
         assert "id" in body
         assert "updated_date_time" in body
 
-    @allure.title("Create the book with empty date passes")
+    @allure.title("Create the book with empty title passes")
     def test_create_book_empty_title(self):
         type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
         title = ""
@@ -45,13 +46,13 @@ class TestsBook:
         assert response.status_code == 200
         body = response.json()
         assert body["type"] == type
-        assert body["title"] == ""
+        assert body["title"] == title
         assert body["creation_date"] == creation_date
         assert "id" in body
         assert "updated_date_time" in body
 
     @allure.title("Create the book with null date passes")
-    def test_create_book_empty_title(self):
+    def test_create_book_null_title(self):
         type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
         title = self.faker.text(20)
         creation_date = None
@@ -59,8 +60,8 @@ class TestsBook:
         assert response.status_code == 200
         body = response.json()
         assert body["type"] == type
-        assert body["title"] == ""
-        assert body["creation_date"] == creation_date
+        assert body["title"] == title
+        assert body["creation_date"] is None
         assert "id" in body
         assert "updated_date_time" in body
 

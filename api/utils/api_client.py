@@ -1,9 +1,18 @@
+import logging
+
 import requests
 from requests import Response
+from http.client import HTTPConnection
+import os
 
 
 class ApiClient:
     BASE_URL = "http://127.0.0.1:5000"
+
+    if "debug" in os.environ and "true" == os.environ["debug"].lower():
+        log = logging.getLogger('urllib3')
+        log.setLevel(logging.DEBUG)
+        HTTPConnection.debuglevel = 1
 
     def create_book(self, type, title, creation_date) -> Response:
         return requests.post(f"{self.BASE_URL}/v1/books/manipulation", json={
