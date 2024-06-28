@@ -5,6 +5,9 @@ from leadership_page import LeadershipPage
 from main_page import MainPage
 
 
+@allure.parent_suite("UI tests")
+@allure.suite("Blog UI tests")
+@allure.sub_suite("Main features of blog")
 class TestsBlog:
 
     @allure.title("CTO personal info available on Leadership page")

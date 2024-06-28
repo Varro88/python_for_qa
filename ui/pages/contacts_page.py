@@ -45,5 +45,6 @@ class ContactsPage(BasePage):
         contact_me = self.wait_for_existence(self.CHECKBOX_CONTACT_ME)
         self.get_next_sibling(contact_me).click()
 
+    @allure.step("Check if form can be submitted")
     def is_submit_enabled(self):
         return self.wait_for_visibility(self.BUTTON_SUBMIT).get_attribute("disabled") == 'true'

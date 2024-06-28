@@ -1,4 +1,5 @@
 import json
+import allure
 import pytest
 from api.utils.api_client import ApiClient
 import logging
@@ -8,6 +9,7 @@ file_content = open('api/resources/test_data.json')
 test_data = json.load(file_content)
 
 
+@allure.title("Prepare test data for existing book")
 @pytest.fixture()
 def existing_book():
     existing_book = test_data["existing_book"]
@@ -20,6 +22,7 @@ def existing_book():
     return existing_book
 
 
+@allure.title("Prepare test data for book to delete")
 @pytest.fixture()
 def book_to_delete():
     book = test_data["book_to_delete"]

@@ -1,5 +1,6 @@
 import time
 
+import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
@@ -14,6 +15,7 @@ class BasePage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 15)
 
+    @allure.step("Close cookies consent")
     def close_cookies_consent(self):
         accept_cookies = self.wait_for_visibility(self.ACCEPT_COOKIES_BUTTON)
         self.wait_for_animation_end(accept_cookies)

@@ -3,8 +3,10 @@ from api.utils.api_client import ApiClient
 from faker import Faker
 
 
+@allure.parent_suite("API tests")
+@allure.suite("Book API tests")
+@allure.sub_suite("Main features of Book API")
 class TestsBook:
-
     # Note: in description wrong type is mentioned: supported one is "Adventure", NOT "Action and Adventure"
     valid_types = ["Science", "Satire", "Drama", "Adventure", "Romance"]
     faker = Faker()
@@ -14,20 +16,6 @@ class TestsBook:
         type = self.valid_types[self.faker.pyint(0, len(self.valid_types)-1)]
         title = self.faker.text(20)
         creation_date = self.faker.date()
-        response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 200
-        body = response.json()
-        assert body["type"] == type
-        assert body["title"] == title
-        assert body["creation_date"] == creation_date
-        assert "id" in body
-        assert "updated_date_time" in body
-
-    @allure.title("Create the book with null date passes")
-    def test_create_book_null_date(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
-        title = self.faker.text(20)
-        creation_date = None
         response = ApiClient().create_book(type, title, creation_date)
         assert response.status_code == 200
         body = response.json()
@@ -52,7 +40,7 @@ class TestsBook:
         assert "updated_date_time" in body
 
     @allure.title("Create the book with null date passes")
-    def test_create_book_null_title(self):
+    def test_create_book_null_date(self):
         type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
         title = self.faker.text(20)
         creation_date = None
@@ -61,9 +49,18 @@ class TestsBook:
         body = response.json()
         assert body["type"] == type
         assert body["title"] == title
-        assert body["creation_date"] is None
+        assert body["creation_date"] == creation_date
         assert "id" in body
         assert "updated_date_time" in body
+
+    @allure.title("Create the book with null title fails")
+    def test_create_book_null_title(self):
+        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
+        title = None
+        creation_date = self.faker.date()
+        response = ApiClient().create_book(type, title, creation_date)
+        assert response.status_code == 400
+        assert response.json()["message"] == "The book entity is not valid."
 
     @allure.title("Create the book with empty type fails")
     def test_create_book_empty_type(self):
