@@ -1,4 +1,7 @@
 import allure
+import pytest
+from hamcrest import assert_that, equal_to, matches_regexp, less_than
+from api.utils import helper
 from api.utils.api_client import ApiClient
 from faker import Faker
 
@@ -8,59 +11,81 @@ from faker import Faker
 @allure.sub_suite("Main features of Book API")
 class TestsBook:
     # Note: in description wrong type is mentioned: supported one is "Adventure", NOT "Action and Adventure"
-    valid_types = ["Science", "Satire", "Drama", "Adventure", "Romance"]
+    UUID_REGEXP = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     faker = Faker()
 
     @allure.title("Create the book passes")
     def test_create_book(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types)-1)]
+        type = helper.get_random_type()
         title = self.faker.text(20)
         creation_date = self.faker.date()
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 200
+        assert_that(response.status_code, equal_to(200))
         body = response.json()
-        assert body["type"] == type
-        assert body["title"] == title
-        assert body["creation_date"] == creation_date
-        assert "id" in body
-        assert "updated_date_time" in body
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["title"], equal_to(title))
+        assert_that(body["creation_date"], equal_to(creation_date))
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["id"], matches_regexp(self.UUID_REGEXP))
+        seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
+        assert_that(seconds_diff, less_than(1))
+
+    @allure.title("Create the book with  '{type}' as type")
+    @pytest.mark.parametrize("type", ["Science", "Satire", "Drama", "Adventure", "Romance"])
+    def test_valid_book_types(self, type):
+        title = self.faker.text(20)
+        creation_date = self.faker.date()
+        response = ApiClient().create_book(type, title, creation_date)
+        assert_that(response.status_code, equal_to(200))
+        body = response.json()
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["title"], equal_to(title))
+        assert_that(body["creation_date"], equal_to(creation_date))
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["id"], matches_regexp(self.UUID_REGEXP))
+        seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
+        assert_that(seconds_diff, less_than(1))
 
     @allure.title("Create the book with empty title passes")
     def test_create_book_empty_title(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
+        type = helper.get_random_type()
         title = ""
         creation_date = self.faker.date()
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 200
+        assert_that(response.status_code, equal_to(200))
         body = response.json()
-        assert body["type"] == type
-        assert body["title"] == title
-        assert body["creation_date"] == creation_date
-        assert "id" in body
-        assert "updated_date_time" in body
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["title"], equal_to(title))
+        assert_that(body["creation_date"], equal_to(creation_date))
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["id"], matches_regexp(self.UUID_REGEXP))
+        seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
+        assert_that(seconds_diff, less_than(1))
 
     @allure.title("Create the book with null date passes")
     def test_create_book_null_date(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
+        type = helper.get_random_type()
         title = self.faker.text(20)
         creation_date = None
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 200
+        assert_that(response.status_code, equal_to(200))
         body = response.json()
-        assert body["type"] == type
-        assert body["title"] == title
-        assert body["creation_date"] == creation_date
-        assert "id" in body
-        assert "updated_date_time" in body
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["title"], equal_to(title))
+        assert_that(body["creation_date"], equal_to(creation_date))
+        assert_that(body["type"], equal_to(type))
+        assert_that(body["id"], matches_regexp(self.UUID_REGEXP))
+        seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
+        assert_that(seconds_diff, less_than(1))
 
     @allure.title("Create the book with null title fails")
     def test_create_book_null_title(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
+        type = helper.get_random_type()
         title = None
         creation_date = self.faker.date()
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 400
-        assert response.json()["message"] == "The book entity is not valid."
+        assert_that(response.status_code, equal_to(400))
+        assert_that(response.json()["message"], equal_to("The book entity is not valid."))
 
     @allure.title("Create the book with empty type fails")
     def test_create_book_empty_type(self):
@@ -68,44 +93,46 @@ class TestsBook:
         title = self.faker.text(20)
         creation_date = self.faker.date()
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 400
-        assert response.json()["message"] == "The book entity is not valid."
+        assert_that(response.status_code, equal_to(400))
+        assert_that(response.json()["message"], equal_to("The book entity is not valid."))
 
     @allure.title("Create the book with wrong date format fails")
     def test_create_book_wrong_date(self):
-        type = self.valid_types[self.faker.pyint(0, len(self.valid_types) - 1)]
+        type = helper.get_random_type()
         title = self.faker.text(20)
         creation_date = "2021-30-02"
         response = ApiClient().create_book(type, title, creation_date)
-        assert response.status_code == 400
-        assert (response.json()["message"] == "The book entity is not valid.")
+        assert_that(response.status_code, equal_to(400))
+        assert_that(response.json()["message"], equal_to("The book entity is not valid."))
 
     @allure.title("Get existing book")
     def test_get_existing_book(self, existing_book):
         response = ApiClient().get_book(existing_book["id"])
-        assert response.status_code == 200
+        assert_that(response.status_code, equal_to(200))
         body = response.json()
-        assert body["type"] == existing_book["type"]
-        assert body["title"] == existing_book["title"]
-        assert body["creation_date"] == existing_book["creation_date"]
-        assert body["id"] == existing_book["id"]
+        assert_that(body["type"], equal_to(existing_book["type"]))
+        assert_that(body["title"], equal_to(existing_book["title"]))
+        assert_that(body["creation_date"], equal_to(existing_book["creation_date"]))
+        assert_that(body["id"], matches_regexp(self.UUID_REGEXP))
+        seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
+        assert_that(seconds_diff, less_than(1))
 
     @allure.title("Get not existing book")
     def test_get_not_existing_book(self):
         response = ApiClient().get_book("wrong-id")
-        assert response.status_code == 404
+        assert_that(response.status_code, equal_to(404))
 
     @allure.title("Delete book")
     def test_delete_existing_book(self, book_to_delete):
         delete_response = ApiClient().delete_book(book_to_delete["id"])
-        assert delete_response.status_code == 200
+        assert_that(delete_response.status_code, equal_to(200))
         get_response = ApiClient().get_book(book_to_delete["id"])
-        assert get_response.status_code == 404
+        assert_that(get_response.status_code, equal_to(404))
 
     @allure.title("Delete not existing book")
     def test_delete_not_existing_book(self):
         delete_response = ApiClient().delete_book("wrong-id")
-        assert delete_response.status_code == 404
+        assert_that(delete_response.status_code, equal_to(404))
 
 
 
