@@ -8,7 +8,7 @@ Contains tests for [Grid Dynamics blog](https://blog.griddynamics.com)
 
 ### How to run
 1. Create venv
-2. Install dependencies
+2. Install dependencies `pip install -r requirements.txt` from **project root**
 3. Run like ` PYTHONPATH=. pytest api/tests/tests_book.py --alluredir allure-results` from **project root**
 4. To view report run `allure serve allure-results`
 

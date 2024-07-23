@@ -78,7 +78,7 @@ class TestsBook:
         seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
         assert_that(seconds_diff, less_than(1))
 
-    @allure.title("Create the book with null title fails")
+    @allure.title("Create the book with null title returns error 400")
     def test_create_book_null_title(self):
         type = helper.get_random_type()
         title = None
@@ -87,7 +87,7 @@ class TestsBook:
         assert_that(response.status_code, equal_to(400))
         assert_that(response.json()["message"], equal_to("The book entity is not valid."))
 
-    @allure.title("Create the book with empty type fails")
+    @allure.title("Create the book with empty type returns error 400")
     def test_create_book_empty_type(self):
         type = ""
         title = self.faker.text(20)
@@ -96,7 +96,7 @@ class TestsBook:
         assert_that(response.status_code, equal_to(400))
         assert_that(response.json()["message"], equal_to("The book entity is not valid."))
 
-    @allure.title("Create the book with wrong date format fails")
+    @allure.title("Create the book with wrong date format returns error 400")
     def test_create_book_wrong_date(self):
         type = helper.get_random_type()
         title = self.faker.text(20)
