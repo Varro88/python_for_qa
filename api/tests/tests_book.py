@@ -78,6 +78,7 @@ class TestsBook:
         seconds_diff = helper.get_seconds_diff(body["updated_date_time"])
         assert_that(seconds_diff, less_than(1))
 
+    # defect as error is 500 instead of 400
     @allure.title("Create the book with null title returns error 400")
     def test_create_book_null_title(self):
         type = helper.get_random_type()

@@ -1,7 +1,7 @@
 import allure
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
+from ui.pages.base_page import BasePage
 
 
 class LeadershipPage(BasePage):
@@ -11,6 +11,7 @@ class LeadershipPage(BasePage):
     @allure.step("Open CTO info card")
     def open_cto_card(self):
         cto_name = self.wait_for_visibility(self.LABEL_CTO_NAME)
+        self.wait_for_animation_end(cto_name)
         cto_name.click()
 
     @allure.step("Get text of CTO info card")

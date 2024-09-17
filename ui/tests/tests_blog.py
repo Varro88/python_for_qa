@@ -1,8 +1,8 @@
 import allure
 
-from contacts_page import ContactsPage
-from leadership_page import LeadershipPage
-from main_page import MainPage
+from ui.pages.contacts_page import ContactsPage
+from ui.pages.leadership_page import LeadershipPage
+from ui.pages.main_page import MainPage
 
 
 @allure.parent_suite("UI tests")
@@ -63,9 +63,9 @@ class TestsBlog:
         4. Fill in the following:
           - First Name = Anna, Last Name = Smith
           - email = annasmith@griddynamics.com
-          - select  How did you hear about us? = Online Ads
+          - select  What are you interested in? = Media inquiry
         5. Click on checkbox “I have read and accepted the Terms & Conditions and Privacy Policy”
-        6. Click on checkbox “I allow Grid Dynamics to contact me”
+        6. Click on checkbox “Subscribe to our latest insights & events”
         7. Ensure Contact button is inactive
         """
         main_page = MainPage(setup)
@@ -76,7 +76,7 @@ class TestsBlog:
         contacts_page.set_firstname("Anna")
         contacts_page.set_lastname("Smith")
         contacts_page.set_email("annasmith@griddynamics.com")
-        contacts_page.set_how_did_hear("Online Ads")
+        contacts_page.what_interested_in("Media inquiry")
         contacts_page.accept_terms()
-        contacts_page.accept_contact_me()
-        assert contacts_page.is_submit_enabled() is True
+        contacts_page.accept_subscribe()
+        assert contacts_page.is_submit_disabled() is True

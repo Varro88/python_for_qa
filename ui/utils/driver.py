@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -14,4 +14,4 @@ class Driver:
                              "OptimizationTargetPrediction,OptimizationGuideModelDownloading,DownloadBubble,"
                              "DownloadBubbleV2,InsecureDownloadWarnings,InterestFeedContentSuggestions,"
                              "SidePanelPinning")
-        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)

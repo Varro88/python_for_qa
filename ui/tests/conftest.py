@@ -1,6 +1,7 @@
 import pytest
-from driver import Driver
 import datetime
+
+from ui.utils.driver import Driver
 
 
 @pytest.fixture(scope="function")

@@ -1,18 +1,17 @@
 import allure
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
+from ui.pages.base_page import BasePage
 
 
 class ContactsPage(BasePage):
     INPUT_FIRST_NAME = (By.ID, "get-in-touch-form-first_name")
     INPUT_LAST_NAME = (By.ID, "get-in-touch-form-last_name")
     INPUT_EMAIl = (By.ID, "get-in-touch-form-email")
-    INPUT_HOW_DID_HEAR = (By.CSS_SELECTOR, "div.get-in-touch-form__dropdown")
-    LOCATOR_DROPDOWN_ITEM = "//div[contains(@class, 'get-in-touch-form__dropdown--item') and .='{}']"
-
-    CHECKBOX_TERMS = (By.NAME, "terms[]")
-    CHECKBOX_CONTACT_ME = (By.NAME, "contact_back[]")
+    DROPDOWN_INTERESTED_IN = (By.CSS_SELECTOR, "div.get-in-touch-form__dropdown")
+    LOCATOR_INTERESTED_IN_ITEM = "//div[@class='get-in-touch-form__dropdown-item' and text()='{}']"
+    CHECKBOX_TERMS = (By.CSS_SELECTOR, "input[name='terms'] + span")
+    CHECKBOX_SUBSCRIBE = (By.CSS_SELECTOR, "input[name='subscribe[]'] + span")
 
     BUTTON_SUBMIT = (By.CSS_SELECTOR, "div.get-in-touch-form__field > input[type='submit']")
 
@@ -28,23 +27,22 @@ class ContactsPage(BasePage):
     def set_email(self, text):
         self.wait_for_visibility(self.INPUT_EMAIl).send_keys(text)
 
-    @allure.step("Select how did you hear about us as '{}'")
-    def set_how_did_hear(self, text):
-        self.wait_for_visibility(self.INPUT_HOW_DID_HEAR).click()
-        selected_item = (By.XPATH, self.LOCATOR_DROPDOWN_ITEM.format(text))
+    @allure.step("Select what are you interested in as '{}'")
+    def what_interested_in(self, item):
+        self.wait_for_visibility(self.DROPDOWN_INTERESTED_IN).click()
+        selected_item = (By.XPATH, self.LOCATOR_INTERESTED_IN_ITEM.format(item))
         self.wait_for_visibility(selected_item).click()
 
     @allure.step("Accept terms")
     def accept_terms(self):
-        terms = self.wait_for_existence(self.CHECKBOX_TERMS)
-        checkbox = self.get_next_sibling(terms)
+        checkbox = self.wait_for_existence(self.CHECKBOX_TERMS)
         self.click_left(checkbox)
 
-    @allure.step("Allow to contact")
-    def accept_contact_me(self):
-        contact_me = self.wait_for_existence(self.CHECKBOX_CONTACT_ME)
-        self.get_next_sibling(contact_me).click()
+    @allure.step("Subscribe")
+    def accept_subscribe(self):
+        subscribe = self.wait_for_existence(self.CHECKBOX_SUBSCRIBE)
+        self.click_left(subscribe)
 
     @allure.step("Check if form can be submitted")
-    def is_submit_enabled(self):
+    def is_submit_disabled(self):
         return self.wait_for_visibility(self.BUTTON_SUBMIT).get_attribute("disabled") == 'true'

@@ -22,7 +22,7 @@ class BasePage:
         accept_cookies.click()
         self.wait_to_disappear(accept_cookies)
 
-    def wait_for_existence(self, locator):
+    def wait_for_existence(self, locator: tuple[str, str]):
         return self.wait.until(EC.presence_of_element_located(locator))
 
     def wait_for_animation_end(self, element: WebElement):
@@ -37,11 +37,11 @@ class BasePage:
                 location = new_location
                 time.sleep(0.2)
 
-    def wait_for_visibility(self, locator):
+    def wait_for_visibility(self, locator:  tuple[str, str]):
         return self.wait.until(EC.visibility_of_element_located(locator))
 
-    def wait_to_disappear(self, element):
-        return self.wait.until(EC.invisibility_of_element(element))
+    def wait_to_disappear(self, locator):
+        return self.wait.until(EC.invisibility_of_element(locator))
 
     def get_next_sibling(self, element: WebElement):
         return element.find_element(By.XPATH, "./following-sibling::*")
@@ -51,6 +51,5 @@ class BasePage:
 
     def click_left(self, element: WebElement):
         offset_x = -element.rect["width"] / 2 + 10
-
         action = ActionChains(self.driver)
         action.move_to_element_with_offset(element, offset_x, 0).click().perform()
